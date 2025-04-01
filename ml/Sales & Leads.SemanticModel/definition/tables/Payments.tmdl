@@ -1,0 +1,58 @@
+table Payments
+	lineageTag: 2ac105e3-7605-4188-8e09-662852b164a6
+
+	column order_id
+		dataType: string
+		lineageTag: c28532a2-4dbe-423b-9ace-f0e889bfe60b
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_sequential
+		dataType: int64
+		formatString: 0
+		lineageTag: cf3b4f8d-120e-4422-956d-e1c42ef6757c
+		summarizeBy: sum
+		sourceColumn: payment_sequential
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_type
+		dataType: string
+		lineageTag: ec7bd310-44f7-4fd5-a8d5-ee5a05f7939f
+		summarizeBy: none
+		sourceColumn: payment_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_installments
+		dataType: int64
+		formatString: 0
+		lineageTag: 9e65b2d2-56f1-4261-92c8-1c6097325f19
+		summarizeBy: sum
+		sourceColumn: payment_installments
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_value
+		dataType: double
+		lineageTag: 983af578-a399-4f1a-b3d1-e347318eb1aa
+		summarizeBy: sum
+		sourceColumn: payment_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Payments = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    dbo_order_pay = Source{[Schema="dbo",Item="order_payments"]}[Data]
+				in
+				    dbo_order_pay
+
+	annotation PBI_ResultType = Table
+

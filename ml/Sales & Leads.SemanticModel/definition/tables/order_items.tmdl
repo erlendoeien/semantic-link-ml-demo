@@ -1,0 +1,100 @@
+table order_items
+	isHidden
+	lineageTag: dc7148a5-7877-41db-aafa-ee466b30436e
+
+	column order_id
+		dataType: string
+		isHidden
+		lineageTag: d506baac-4ec0-4ba8-b5d7-68f13031b35c
+		summarizeBy: none
+		sourceColumn: order_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_item_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c7f56572-9008-4950-9c9f-4fa420b67a30
+		summarizeBy: sum
+		sourceColumn: order_item_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		isHidden
+		lineageTag: 83f9abea-37d8-44fd-8b82-fbd168eede25
+		summarizeBy: none
+		sourceColumn: product_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_id
+		dataType: string
+		isHidden
+		lineageTag: 7d1a7ce8-c6fe-47a4-9725-db12b98c1ae8
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipping_limit_date
+		dataType: dateTime
+		isHidden
+		formatString: General Date
+		lineageTag: 60c3ce65-655d-427b-9b11-7ae37729b0af
+		summarizeBy: none
+		sourceColumn: shipping_limit_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column price
+		dataType: double
+		isHidden
+		lineageTag: 031be500-b26c-4056-b9e7-85acb327d909
+		summarizeBy: sum
+		sourceColumn: price
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column freight_value
+		dataType: double
+		isHidden
+		lineageTag: b011c1b7-14ec-4efb-94ab-13d7d6218bf7
+		summarizeBy: sum
+		sourceColumn: freight_value
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition order_items = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    dbo_order_items = Source{[Schema="dbo",Item="order_items"]}[Data]
+				in
+				    dbo_order_items
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+

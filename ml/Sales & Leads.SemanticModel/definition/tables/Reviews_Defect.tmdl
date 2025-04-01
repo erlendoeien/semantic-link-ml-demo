@@ -1,0 +1,42 @@
+table Reviews_Defect
+	lineageTag: 14e250e5-c45a-49ac-8877-cb6f2aafa145
+
+	column review_id
+		dataType: string
+		lineageTag: 74c3e601-d92d-4a0a-a147-503971dcc25a
+		summarizeBy: none
+		sourceColumn: review_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column review
+		dataType: string
+		lineageTag: 5b0af878-ada0-403e-b308-c8337eb0c009
+		summarizeBy: none
+		sourceColumn: review
+
+		annotation SummarizationSetBy = Automatic
+
+	column defect_score
+		dataType: double
+		lineageTag: 6ffd6a17-58e1-4a8f-b344-a7adf06cb8f1
+		summarizeBy: sum
+		sourceColumn: defect_score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Reviews_Defect = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-x2iubi45dmbeba7klx53wlabay.datawarehouse.fabric.microsoft.com", "Gold"),
+				    dbo_Reviews_Defect = Source{[Schema="dbo",Item="Reviews_Defect"]}[Data]
+				in
+				    dbo_Reviews_Defect
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

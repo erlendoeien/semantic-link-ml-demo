@@ -1,0 +1,32 @@
+table Product_Segments
+	lineageTag: 3c6e4256-6429-4bad-a60d-e44a112d1450
+
+	column Category
+		dataType: string
+		lineageTag: 443bacc7-b2ea-4d98-86be-918b196d0e88
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_segment
+		dataType: string
+		lineageTag: 586a49d3-876d-416a-a76e-e644c2b9a875
+		summarizeBy: none
+		sourceColumn: product_segment
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Product_Segments = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-x2iubi45dmbeba7klx53wlabay.datawarehouse.fabric.microsoft.com", "Gold"),
+				    product_segments = Source{[Schema="dbo",Item="ml_productsegments"]}[Data]
+				in
+				    product_segments
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

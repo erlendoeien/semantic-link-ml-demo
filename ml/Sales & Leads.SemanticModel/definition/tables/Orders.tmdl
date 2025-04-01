@@ -1,0 +1,153 @@
+table Orders
+	lineageTag: c6eb5d40-5fd9-4457-859b-963cc128fef8
+
+	column order_id
+		dataType: string
+		lineageTag: 805e93b5-2cca-4b59-b544-77b57f79fb98
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: 36611d67-f215-4246-8184-f858129e1f95
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_status
+		dataType: string
+		lineageTag: fe9d163d-b308-462a-9da7-03759432aae3
+		summarizeBy: none
+		sourceColumn: order_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_purchase_timestamp
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 7896c08f-ebfd-4623-922d-e9a7b5aa1067
+		summarizeBy: none
+		sourceColumn: order_purchase_timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_approved_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e26cfde4-7399-47f8-9b06-e34d759b3f57
+		summarizeBy: none
+		sourceColumn: order_approved_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_delivered_carrier_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e4d96148-0602-4b13-b302-355abc4e38ec
+		summarizeBy: none
+		sourceColumn: order_delivered_carrier_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_delivered_customer_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 336b8f88-0937-4b30-809f-f9c5e0dfbc66
+		summarizeBy: none
+		sourceColumn: order_delivered_customer_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_estimated_delivery_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4a5a1e8d-0e4c-44bf-b991-d0f53c46060b
+		summarizeBy: none
+		sourceColumn: order_estimated_delivery_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateKey = YEAR([order_approved_at]) * 10000 + MONTH([order_approved_at]) * 100 + DAY([order_approved_at])
+		formatString: 0
+		lineageTag: 3a7dbe98-8faf-45a0-9b88-211e80b6a9a5
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_to_delivery_hours = DATEDIFF(Orders[order_purchase_timestamp], Orders[order_delivered_customer_date], HOUR)
+		formatString: 0
+		lineageTag: c659228d-bd3b-450e-8e49-f584fab31593
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: 26c4d983-7581-409a-bfee-d2f6454496d3
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_id
+		dataType: string
+		lineageTag: d53a1575-9412-4dab-9cdd-711f08803b34
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipping_limit_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 63ace1d2-a3d5-4f2e-bf90-866bcaa46a1b
+		summarizeBy: none
+		sourceColumn: shipping_limit_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column price
+		dataType: double
+		lineageTag: 22e0cfc2-66c5-445c-bc62-15c621a5f1b3
+		summarizeBy: sum
+		sourceColumn: price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column freight_value
+		dataType: double
+		lineageTag: c0d5dbf7-f397-4e5f-8db5-cc0d7cf82eb1
+		summarizeBy: sum
+		sourceColumn: freight_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column order_item_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ce4d0a21-0634-48ff-9cf3-2ef8c88e2426
+		summarizeBy: sum
+		sourceColumn: order_item_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Orders = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    dbo_orders = Source{[Schema="dbo",Item="orders"]}[Data],
+				    #"Merged Queries" = Table.NestedJoin(dbo_orders, {"order_id"}, order_items, {"order_id"}, "order_items", JoinKind.Inner),
+				    #"Expanded order_items" = Table.ExpandTableColumn(#"Merged Queries", "order_items", {"order_item_id", "product_id", "seller_id", "shipping_limit_date", "price", "freight_value"}, {"order_item_id", "product_id", "seller_id", "shipping_limit_date", "price", "freight_value"})
+				in
+				    #"Expanded order_items"
+
+	annotation PBI_ResultType = Table
+

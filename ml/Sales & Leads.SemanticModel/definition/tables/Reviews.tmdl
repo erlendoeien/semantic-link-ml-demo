@@ -1,0 +1,103 @@
+table Reviews
+	lineageTag: 06c7c60a-1358-4ba3-a166-fcc51db54175
+
+	column review_id
+		dataType: string
+		lineageTag: bb8d220c-7259-4443-8ec1-6662f9a31e92
+		summarizeBy: none
+		sourceColumn: review_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_id
+		dataType: string
+		lineageTag: df29a8a8-5d06-47ac-96b0-ae3f6034238e
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_score
+		dataType: int64
+		formatString: 0
+		lineageTag: 65c0a1e8-0db0-4a3d-88f0-62b9489d0a67
+		summarizeBy: sum
+		sourceColumn: review_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_creation_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5caca4e6-c6f9-4e70-becd-dfdcf6e2d0cd
+		summarizeBy: none
+		sourceColumn: review_creation_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_answer_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 664e6de1-4f0b-4312-ba11-cf7859867dd4
+		summarizeBy: none
+		sourceColumn: review_answer_timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_title
+		dataType: string
+		lineageTag: 82288cf0-55ec-4c9a-bc39-57dff8f6e3b4
+		summarizeBy: none
+		sourceColumn: review_comment_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_title_en
+		dataType: string
+		lineageTag: 233e724c-677f-4857-8b3f-f7f245d4acda
+		summarizeBy: none
+		sourceColumn: review_comment_title_en
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_message
+		dataType: string
+		lineageTag: f2baa92b-80e4-44c0-985e-cbd55b1a423c
+		summarizeBy: none
+		sourceColumn: review_comment_message
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_message_en
+		dataType: string
+		lineageTag: 8babbd37-c969-40f4-9036-ef8a0156c917
+		summarizeBy: none
+		sourceColumn: review_comment_message_en
+
+		annotation SummarizationSetBy = Automatic
+
+	column defect_score
+		dataType: double
+		lineageTag: f0693d9b-7fc8-4f59-9063-472b55e920d3
+		summarizeBy: sum
+		sourceColumn: defect_score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Reviews = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    dbo_reviews = Source{[Schema="dbo",Item="order_reviews"]}[Data],
+				    #"Merged Queries" = Table.NestedJoin(dbo_reviews, {"review_id"}, Reviews_Defect, {"review_id"}, "Reviews_Defect", JoinKind.LeftOuter),
+				    #"Expanded Reviews_Defect" = Table.ExpandTableColumn(#"Merged Queries", "Reviews_Defect", {"defect_score"}, {"defect_score"})
+				in
+				    #"Expanded Reviews_Defect"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

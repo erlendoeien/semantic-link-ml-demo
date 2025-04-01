@@ -1,0 +1,71 @@
+table MeasuresTable
+	lineageTag: 358204f7-76dd-41b6-8e5c-762417e9c622
+
+	measure 'Total Sales' = SUM(Orders[price])
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		lineageTag: 0476b70c-88a2-446f-a766-35d4dc704b59
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Total Orders' = COUNTROWS(Orders)
+		formatString: 0
+		lineageTag: 41bc62a1-49be-4515-bc5c-20550adb8159
+
+	measure 'Average Review' = CALCULATE(AVERAGE(Reviews[review_score]), CROSSFILTER(Orders[order_id], Reviews[order_id], Both))
+		lineageTag: 585d9bab-e158-4d8a-9e0e-a4d05d4a5154
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Reviews' =
+			CALCULATE(COUNTROWS(Reviews)
+																	,CROSSFILTER(Orders[order_id], Reviews[order_id], Both)
+																	// ,CROSSFILTER(products[product_id], order_items[product_id], Both)
+																	)
+		formatString: 0
+		lineageTag: d4b81072-be57-42e6-8190-0522dfbddd22
+
+	measure 'Total Active Customers' = DISTINCTCOUNT(Orders[customer_id])
+		formatString: 0
+		lineageTag: 5be8da74-c34f-4b77-b86a-fc1a0e7028dc
+
+	measure 'Average Delivery Time' = AVERAGE(Orders[time_to_delivery_hours])
+		lineageTag: 5cd17cc4-84f2-469c-a04a-b7d53391818a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Sales Forecast' = SUM(Sales_Forecast[predicted_sales])
+		formatString: "R$"#,0.00;-"R$"#,0.00;"R$"#,0.00
+		lineageTag: 75d91acc-f127-4f63-a241-7b11a94f5c24
+
+		annotation PBI_FormatHint = {"currencyCulture":"es-BR"}
+
+	measure 'Average Defect Ratio' = CALCULATE(AVERAGE(Reviews[defect_score]),CROSSFILTER(Orders[order_id], Reviews[order_id], Both))
+		lineageTag: 84c8222c-ec1a-4a18-8013-43d602332325
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Sales missing dates' = ```
+			IF(ISBLANK([Total Sales]), 0, [Total Sales])
+			
+			
+			```
+		lineageTag: d6e1aaea-2c6e-4b93-b0d0-a38fa71cd7f7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Value
+		isHidden
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 8bb2f5da-0560-443e-af5d-c9b22cef1534
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MeasuresTable = calculated
+		mode: import
+		source = {"Col1"= BLANK()}
+
+	annotation PBI_Id = fd75587efffb44e99f15b1f7e958df65
+

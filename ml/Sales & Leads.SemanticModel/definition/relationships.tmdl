@@ -1,0 +1,46 @@
+relationship 8ce9ee02-a8d5-f421-abe9-602676887e0f
+	toCardinality: many
+	fromColumn: Customers.customer_zip_code_prefix
+	toColumn: 'Geolocation Customers'.geolocation_zip_code_prefix
+
+relationship f2b350e1-8639-8efb-26eb-4513c8d97531
+	crossFilteringBehavior: bothDirections
+	fromColumn: Orders.customer_id
+	toColumn: Customers.customer_id
+
+relationship 9a301f9b-099f-f51f-4558-9801d4d5f876
+	fromColumn: Orders.DateKey
+	toColumn: Date.DateKey
+
+relationship AutoDetected_a08a8b07-db6f-4c28-9505-c91d851d8551
+	fromColumn: Orders.seller_id
+	toColumn: Sellers.seller_id
+
+relationship AutoDetected_2ed5b71a-2c1d-4dcb-9861-1fe40b18c541
+	fromColumn: Orders.product_id
+	toColumn: Products.product_id
+
+relationship e0b306ba-081d-1ce1-1968-7ca94e69e905
+	toCardinality: many
+	fromColumn: Orders.order_id
+	toColumn: Reviews.order_id
+
+relationship 85d8dbbe-3708-0f57-e438-d7733a0fefd6
+	toCardinality: many
+	fromColumn: Orders.order_id
+	toColumn: Payments.order_id
+
+relationship 51e972fa-2984-58af-d423-cec416cc734a
+	toCardinality: many
+	fromColumn: Sellers.seller_zip_code_prefix
+	toColumn: 'Geolaction Sellers'.geolocation_zip_code_prefix
+
+relationship 893ac2a0-3442-a475-ece3-09e1d83a525a
+	toCardinality: many
+	fromColumn: Orders.seller_id
+	toColumn: Leads.seller_id
+
+relationship 8803fe3f-7e8a-9d67-2a77-cf754378c5a6
+	fromColumn: Sales_Forecast.datekey
+	toColumn: Date.DateKey
+

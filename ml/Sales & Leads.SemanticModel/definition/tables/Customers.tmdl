@@ -1,0 +1,56 @@
+table Customers
+	lineageTag: 3164d052-f5ba-495c-bcda-a40633b8daa7
+
+	column customer_id
+		dataType: string
+		isKey
+		lineageTag: bdce65f5-6a66-4c02-b953-1385b24ed28e
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_unique_id
+		dataType: string
+		lineageTag: 33e5e829-8ee7-4f9a-89e9-baccaa2eec9e
+		summarizeBy: none
+		sourceColumn: customer_unique_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_zip_code_prefix
+		dataType: int64
+		formatString: 0
+		lineageTag: daaf8f01-88a7-4d5b-90a4-f9e35b37450a
+		summarizeBy: none
+		sourceColumn: customer_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_city
+		dataType: string
+		lineageTag: dfb4435b-6783-4a51-959e-ae3ae00d21b3
+		summarizeBy: none
+		sourceColumn: customer_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_state
+		dataType: string
+		lineageTag: 03a21584-ef72-47bb-a382-9f785760a73e
+		summarizeBy: none
+		sourceColumn: customer_state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customers = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    dbo_customers = Source{[Schema="dbo",Item="customers"]}[Data]
+				in
+				    dbo_customers
+
+	annotation PBI_ResultType = Table
+

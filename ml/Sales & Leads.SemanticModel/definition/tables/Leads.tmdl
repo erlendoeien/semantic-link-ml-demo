@@ -1,0 +1,163 @@
+table Leads
+	lineageTag: b3d4a537-ce50-4cb3-a442-79cb152044ce
+
+	column mql_id
+		dataType: string
+		isKey
+		lineageTag: 9202b946-92be-4190-a29e-b3cf732cc252
+		summarizeBy: none
+		sourceColumn: mql_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_contact_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c6fed9f0-1fdc-4a91-b6f6-d09fc8b7b1ca
+		summarizeBy: none
+		sourceColumn: first_contact_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column landing_page_id
+		dataType: string
+		lineageTag: 4e9cd351-c5a6-4b57-aa34-319358b9818e
+		summarizeBy: none
+		sourceColumn: landing_page_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column origin
+		dataType: string
+		lineageTag: 386a5338-369a-4a40-9385-3394825e221c
+		summarizeBy: none
+		sourceColumn: origin
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_id
+		dataType: string
+		lineageTag: 25de2a34-b00d-4eea-a6fe-0b50911800d0
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sdr_id
+		dataType: string
+		lineageTag: ce9cc59a-3bc5-4365-ad41-2ef3898cb51c
+		summarizeBy: none
+		sourceColumn: sdr_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sr_id
+		dataType: string
+		lineageTag: 5b12dc86-9b43-405a-ab45-11ff9b15bec9
+		summarizeBy: none
+		sourceColumn: sr_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column won_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fe8e35b4-45d5-49e2-843b-db7f328f140f
+		summarizeBy: none
+		sourceColumn: won_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_segment
+		dataType: string
+		lineageTag: e179015f-8059-472c-b08d-bc8411a817d7
+		summarizeBy: none
+		sourceColumn: business_segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column lead_type
+		dataType: string
+		lineageTag: 5de8e192-63d7-47d4-b5a3-f0818bbf736e
+		summarizeBy: none
+		sourceColumn: lead_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column lead_behaviour_profile
+		dataType: string
+		lineageTag: f756e44f-a3dc-4a20-84a2-8fb32c0cc684
+		summarizeBy: none
+		sourceColumn: lead_behaviour_profile
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_company
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 643b5554-5746-4423-b458-d6c51e222aec
+		summarizeBy: none
+		sourceColumn: has_company
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_gtin
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a47946e1-5e3e-4d6a-8e4c-f4aa5bf84c1e
+		summarizeBy: none
+		sourceColumn: has_gtin
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_stock
+		dataType: string
+		lineageTag: 5561a548-db01-4bd6-b3ce-782bed8428e6
+		summarizeBy: none
+		sourceColumn: average_stock
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_type
+		dataType: string
+		lineageTag: 0dee26a8-05e6-4efe-897b-c8537ddb972f
+		summarizeBy: none
+		sourceColumn: business_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column declared_product_catalog_size
+		dataType: double
+		lineageTag: 2bda9898-88aa-4f4d-87d4-c31094235709
+		summarizeBy: sum
+		sourceColumn: declared_product_catalog_size
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column declared_monthly_revenue
+		dataType: double
+		lineageTag: f5824cb0-ab96-4f91-90f4-c9d4a26d71dc
+		summarizeBy: sum
+		sourceColumn: declared_monthly_revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Leads = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    dbo_marketing_qualified_leads = Source{[Schema="dbo",Item="marketing_qualified_leads"]}[Data],
+				    #"Merged Queries" = Table.NestedJoin(dbo_marketing_qualified_leads, {"mql_id"}, closed_deals, {"mql_id"}, "closed_deals", JoinKind.LeftOuter),
+				    #"Expanded closed_deals" = Table.ExpandTableColumn(#"Merged Queries", "closed_deals", {"seller_id", "sdr_id", "sr_id", "won_date", "business_segment", "lead_type", "lead_behaviour_profile", "has_company", "has_gtin", "average_stock", "business_type", "declared_product_catalog_size", "declared_monthly_revenue"}, {"seller_id", "sdr_id", "sr_id", "won_date", "business_segment", "lead_type", "lead_behaviour_profile", "has_company", "has_gtin", "average_stock", "business_type", "declared_product_catalog_size", "declared_monthly_revenue"})
+				in
+				    #"Expanded closed_deals"
+
+	annotation PBI_ResultType = Table
+

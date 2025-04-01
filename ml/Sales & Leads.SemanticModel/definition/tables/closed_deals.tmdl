@@ -1,0 +1,178 @@
+table closed_deals
+	isHidden
+	lineageTag: b4dd738c-b0b8-4c14-adc9-147bb6915961
+
+	column mql_id
+		dataType: string
+		isHidden
+		lineageTag: 99796390-0464-475e-b3a7-9b06b947d69f
+		summarizeBy: none
+		sourceColumn: mql_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_id
+		dataType: string
+		isHidden
+		lineageTag: efd800ba-297a-46ea-aa2c-0d272101b95e
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column sdr_id
+		dataType: string
+		isHidden
+		lineageTag: 8765d7c2-2c0b-43ca-92b0-ef769579e485
+		summarizeBy: none
+		sourceColumn: sdr_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column sr_id
+		dataType: string
+		isHidden
+		lineageTag: dbc04f43-1fd1-472b-ba1f-a0bef402fbc2
+		summarizeBy: none
+		sourceColumn: sr_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column won_date
+		dataType: dateTime
+		isHidden
+		formatString: General Date
+		lineageTag: a20c0e09-5a9e-4684-bc78-37f04af7f044
+		summarizeBy: none
+		sourceColumn: won_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_segment
+		dataType: string
+		isHidden
+		lineageTag: e1888c9c-dd68-4c2e-bbf6-18f5e3752799
+		summarizeBy: none
+		sourceColumn: business_segment
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column lead_type
+		dataType: string
+		isHidden
+		lineageTag: ed9cde95-4655-4277-9248-1e388d7f33c6
+		summarizeBy: none
+		sourceColumn: lead_type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column lead_behaviour_profile
+		dataType: string
+		isHidden
+		lineageTag: 33c17a17-27a0-4be8-b53f-cdf027e156c7
+		summarizeBy: none
+		sourceColumn: lead_behaviour_profile
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_company
+		dataType: boolean
+		isHidden
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a484698b-0f37-495a-bb27-ac78e69dfc39
+		summarizeBy: none
+		sourceColumn: has_company
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_gtin
+		dataType: boolean
+		isHidden
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: acdab13b-0fa3-4764-be0c-12bd9e8cb2b1
+		summarizeBy: none
+		sourceColumn: has_gtin
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_stock
+		dataType: string
+		isHidden
+		lineageTag: a61fe7d5-c495-4233-84db-7cba1b51ee79
+		summarizeBy: none
+		sourceColumn: average_stock
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_type
+		dataType: string
+		isHidden
+		lineageTag: ebe3abbb-5b45-4ec0-b10b-0a5f5aa1cedd
+		summarizeBy: none
+		sourceColumn: business_type
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column declared_product_catalog_size
+		dataType: double
+		isHidden
+		lineageTag: 10d12495-d9ec-4676-bd7d-cb654eb897d7
+		summarizeBy: sum
+		sourceColumn: declared_product_catalog_size
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column declared_monthly_revenue
+		dataType: double
+		isHidden
+		lineageTag: 9f92a29a-ed3a-4099-b417-1fe03ef94ea3
+		summarizeBy: sum
+		sourceColumn: declared_monthly_revenue
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition closed_deals = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    dbo_closed_deals = Source{[Schema="dbo",Item="closed_deals"]}[Data]
+				in
+				    dbo_closed_deals
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+

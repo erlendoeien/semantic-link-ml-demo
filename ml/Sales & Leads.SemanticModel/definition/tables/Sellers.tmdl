@@ -1,0 +1,48 @@
+table Sellers
+	lineageTag: dd96c9b5-bed3-4e66-b644-5a3468e94933
+
+	column seller_id
+		dataType: string
+		isKey
+		lineageTag: a7a1594d-60ad-41e3-bffc-6884994159db
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_zip_code_prefix
+		dataType: int64
+		formatString: 0
+		lineageTag: 210f8cda-b6de-4a27-91ef-d0f7f23248cc
+		summarizeBy: none
+		sourceColumn: seller_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_city
+		dataType: string
+		lineageTag: a6b8f9cd-ce7b-4950-a6f7-43e2a2a4234e
+		summarizeBy: none
+		sourceColumn: seller_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_state
+		dataType: string
+		lineageTag: 26636539-925f-49f9-a13b-52cdc6786c65
+		summarizeBy: none
+		sourceColumn: seller_state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sellers = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    dbo_sellers = Source{[Schema="dbo",Item="sellers"]}[Data]
+				in
+				    dbo_sellers
+
+	annotation PBI_ResultType = Table
+

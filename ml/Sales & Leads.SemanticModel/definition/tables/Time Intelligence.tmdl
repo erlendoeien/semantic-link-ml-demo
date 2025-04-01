@@ -1,0 +1,52 @@
+table 'Time Intelligence'
+	lineageTag: 7d04a825-0414-43ee-8f71-d411faf19888
+
+	calculationGroup
+
+		calculationItem Current = SELECTEDMEASURE()
+
+		calculationItem MTD = ```
+				CALCULATE(SELECTEDMEASURE(), DATESMTD('Date'[Date])) 
+				```
+
+		calculationItem YTD = CALCULATE(SELECTEDMEASURE(), DATESYTD('Date'[Date]))
+
+		calculationItem PY = CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR('Date'[Date]))
+
+		calculationItem YOY =
+				SELECTEDMEASURE() -
+				CALCULATE(
+				    SELECTEDMEASURE(),
+				    'Time Intelligence'[Time Calculation] = "PY"
+				)
+
+		calculationItem YOY% =
+				DIVIDE(
+				    CALCULATE(
+				        SELECTEDMEASURE(),
+				        'Time Intelligence'[Time Calculation]="YOY"
+				    ),
+				    CALCULATE(
+				        SELECTEDMEASURE(),
+				        'Time Intelligence'[Time Calculation]="PY"
+				    )
+				)
+
+	column 'Time calculation'
+		dataType: string
+		lineageTag: f7f5fe9f-738f-4992-bc53-62fe33d126c9
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ordinal
+		dataType: int64
+		formatString: 0
+		lineageTag: b1d21971-b80f-43f5-900d-39b314ffb06a
+		summarizeBy: sum
+		sourceColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+

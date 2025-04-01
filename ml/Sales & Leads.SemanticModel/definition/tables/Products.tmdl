@@ -1,0 +1,132 @@
+table Products
+	lineageTag: 7b8506af-8b66-43eb-8e6b-764c1bd7f343
+
+	column product_category_name
+		dataType: string
+		lineageTag: 9593f877-ece6-437b-bd1b-de56d02e6f06
+		summarizeBy: none
+		sourceColumn: product_category_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		isKey
+		lineageTag: 3922ea54-1263-4960-90f1-bbdd12a679e4
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name_lenght
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c01a441-ad5f-4370-b8db-c6d3215d0a0b
+		summarizeBy: none
+		sourceColumn: product_name_lenght
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_description_lenght
+		dataType: int64
+		formatString: 0
+		lineageTag: 17daa748-2fb6-43e9-a2ee-25cfb8a3e08a
+		summarizeBy: none
+		sourceColumn: product_description_lenght
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_photos_qty
+		dataType: int64
+		formatString: 0
+		lineageTag: 0bd77357-1215-4d21-a560-c7bde42cbb64
+		summarizeBy: none
+		sourceColumn: product_photos_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_weight_g
+		dataType: int64
+		formatString: 0
+		lineageTag: 27896625-e6a9-45cf-a051-c7a03cc5dffe
+		summarizeBy: none
+		sourceColumn: product_weight_g
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_length_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 46584fcf-3e9a-4eb2-add8-c2a24a3ce9d9
+		summarizeBy: none
+		sourceColumn: product_length_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_height_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 328c1d59-787d-49bb-a025-8f34436f0d22
+		summarizeBy: none
+		sourceColumn: product_height_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_width_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 730dc875-d0e1-4c3d-8844-c9fd465b5681
+		summarizeBy: none
+		sourceColumn: product_width_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: a4913185-a282-4030-a5d7-7c15e4e51b44
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Product Segment'
+		dataType: string
+		lineageTag: 475eacc9-614a-4ece-9c13-f165779b567d
+		summarizeBy: none
+		sourceColumn: Product Segment
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'higher_order_category Hierarchy'
+		lineageTag: bf580b9e-580d-41f7-a53f-15b7fe185e4d
+
+		level 'Product Segment'
+			lineageTag: 4e0ec3d2-94d1-465d-85fe-2047df7cefee
+			column: 'Product Segment'
+
+		level Category
+			lineageTag: 6c15e3f6-cb1b-4a2a-8659-ad8f59f4ad16
+			column: Category
+
+	partition Products = m
+		mode: import
+		source =
+				let
+				    Translated = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    Gold = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-x2iubi45dmbeba7klx53wlabay.datawarehouse.fabric.microsoft.com", "Gold"),
+				    dbo_products = Translated{[Schema="dbo",Item="products"]}[Data],
+					dbo_category_translations = Translated{[Schema="dbo",Item="category_name"]}[Data],
+					ProductWithCategory = Table.Join(dbo_products, {"product_category_name"}, Table.PrefixColumns(dbo_category_translations, "Mapping"), {"Mapping.product_category_name"},  JoinKind.LeftOuter),
+					//ProductWithCategoryExpanded = Table.ExpandTableColumn(ProductWithCategory, "ProductCategoryTranslateded", {"product_category_name_english"}, {"product_category_name_english"}),
+				    ProductWithCategoryCleaned = Table.ReplaceValue(ProductWithCategory,"_"," ",Replacer.ReplaceText,{"Mapping.product_category_name_english"}),
+					product_segments = Gold{[Schema="dbo",Item="ml_productsegments"]}[Data],
+					ProductWithSegments = Table.Join(ProductWithCategoryCleaned, {"Mapping.product_category_name_english"}, product_segments, {"Category"}, JoinKind.LeftOuter),
+					ProductWithSegmentsRenamed = Table.RenameColumns(ProductWithSegments,{{"product_segment","Product Segment"}}),
+					Final = Table.RemoveColumns(ProductWithSegmentsRenamed,{"Mapping.product_category_name_english"})
+				in
+				    Final
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

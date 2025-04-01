@@ -1,0 +1,59 @@
+table 'Geolocation Customers'
+	lineageTag: 441ffe9a-2327-4e76-a7fa-9145442067d2
+
+	column geolocation_zip_code_prefix
+		dataType: int64
+		formatString: 0
+		lineageTag: 46def5b4-829c-4a36-9184-2c2db8abdd61
+		summarizeBy: none
+		sourceColumn: geolocation_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column geolocation_lat
+		dataType: double
+		lineageTag: f205bec6-844b-47fb-9c71-516ea31ee7e0
+		summarizeBy: sum
+		sourceColumn: geolocation_lat
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column geolocation_lng
+		dataType: double
+		lineageTag: 9382e1ca-f2f6-4d13-8118-c13229d72385
+		summarizeBy: sum
+		sourceColumn: geolocation_lng
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column geolocation_city
+		dataType: string
+		lineageTag: ed986446-6c0b-42b5-ba57-16a4c580d330
+		summarizeBy: none
+		sourceColumn: geolocation_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column geolocation_state
+		dataType: string
+		lineageTag: 17f6b750-f82b-46bc-a838-f7feb8ef1d67
+		summarizeBy: none
+		sourceColumn: geolocation_state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Geolocation Customers' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-xta6hfkrieeenarpmsdnxopakm.datawarehouse.fabric.microsoft.com", "Translated"),
+				    dbo_geolocation = Source{[Schema="dbo",Item="geolocation"]}[Data]
+				in
+				    dbo_geolocation
+
+	annotation PBI_ResultType = Table
+

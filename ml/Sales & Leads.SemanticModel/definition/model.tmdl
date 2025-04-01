@@ -1,0 +1,39 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Customers","closed_deals","Geolocation Customers","Orders","order_items","Payments","Products","Leads","Reviews","Sellers","Geolaction Sellers","Sales_Forecast","Reviews_Defect","Product_Categories_Mapping"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBIDesktopVersion = 2.142.7627.5 (Main)+9a3144321c8b5462ab194cda892c20b7d6327609
+
+annotation PBI_ProTooling = ["DevMode","WebModelingEdit","CalcGroup","DaxQueryView_Desktop","TMDL-Extension"]
+
+annotation __PBIService_Versioning_SaveVersion = 68cd86dd-66ec-4695-89fc-9d3811762236
+
+ref table Customers
+ref table closed_deals
+ref table 'Geolocation Customers'
+ref table Orders
+ref table order_items
+ref table Payments
+ref table Products
+ref table Leads
+ref table Reviews
+ref table Sellers
+ref table MeasuresTable
+ref table 'Time Intelligence'
+ref table Date
+ref table 'Geolaction Sellers'
+ref table Sales_Forecast
+ref table Reviews_Defect
+ref table Product_Segments
+
+ref cultureInfo en-GB
+

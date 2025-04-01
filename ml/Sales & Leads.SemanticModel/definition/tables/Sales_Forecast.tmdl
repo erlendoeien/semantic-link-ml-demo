@@ -1,0 +1,51 @@
+table Sales_Forecast
+	lineageTag: 0fdf2b52-3108-4640-a928-d4cdacb7975d
+
+	column date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7f7ae63d-88ac-4e3e-87f6-91df3d5b71d8
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column predicted_sales
+		dataType: double
+		lineageTag: e1a39929-1a67-4de9-ad9d-952b73a6be22
+		summarizeBy: sum
+		sourceColumn: predicted_sales
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column prediction_ts
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 90194c07-6c7b-48e2-9f9d-0ac53af3af4a
+		summarizeBy: none
+		sourceColumn: prediction_ts
+
+		annotation SummarizationSetBy = Automatic
+
+	column datekey
+		dataType: int64
+		formatString: 0
+		lineageTag: 448e4069-ee74-459f-bb15-ef8699118158
+		summarizeBy: none
+		sourceColumn: datekey
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sales_Forecast = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ejej5uqkx7vubp7yzloowv6jmi-x2iubi45dmbeba7klx53wlabay.datawarehouse.fabric.microsoft.com", "Gold"),
+				    dbo_Sales_Forecast = Source{[Schema="dbo",Item="Sales_Forecast"]}[Data]
+				in
+				    dbo_Sales_Forecast
+
+	annotation PBI_ResultType = Table
+
